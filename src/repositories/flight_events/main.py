@@ -20,10 +20,19 @@ class FlightEventsAPI(FlightEventReadRepository):
         """List flight events."""
         async with httpx.AsyncClient() as client:
             response = await client.get(self.base_url)
-            
+
             if response.is_error:
                 raise FlightEventRetrievalError(
                     f"Failed to retrieve flight events from API: {response.status_code}"
                 )
-            
-            return [FlightEvent(**event) for event in response.json()]
+
+            return [
+                FlightEvent(
+                    flight_number=event["flight_number"],
+                    from_airport=event["departure_city"],
+                    to_airport=event["arrival_city"],
+                    departure_time=event["departure_datetime"],
+                    arrival_time=event["arrival_datetime"],
+                )
+                for event in await response.json()
+            ]

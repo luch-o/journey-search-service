@@ -10,10 +10,10 @@ class FlightEvent(BaseModel):
     """Flight event model."""
 
     flight_number: str
+    from_airport: str
+    to_airport: str
     departure_time: datetime
     arrival_time: datetime
-    departure_airport: str
-    arrival_airport: str
 
 
 class Journey(BaseModel):
