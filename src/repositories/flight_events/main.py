@@ -1,0 +1,29 @@
+"""Flight events repository that uses an external API."""
+
+import httpx
+
+from src.core.config import Settings
+from src.models import FlightEvent
+
+from .exceptions import FlightEventRetrievalError
+from .interface import FlightEventReadRepository
+
+
+class FlightEventsAPI(FlightEventReadRepository):
+    """Flight events repository implementation."""
+
+    def __init__(self, settings: Settings) -> None:
+        """Initialize the flight events repository."""
+        self.base_url = settings.flight_events_api_url
+
+    async def list(self) -> list[FlightEvent]:
+        """List flight events."""
+        async with httpx.AsyncClient() as client:
+            response = await client.get(self.base_url)
+            
+            if response.is_error:
+                raise FlightEventRetrievalError(
+                    f"Failed to retrieve flight events from API: {response.status_code}"
+                )
+            
+            return [FlightEvent(**event) for event in response.json()]
