@@ -6,10 +6,10 @@ from src.core.config import Settings
 from src.models import FlightEvent
 
 from .exceptions import FlightEventRetrievalError
-from .interface import FlightEventReadRepository
+from .interface import FlightEventReadRepositoryInterface
 
 
-class FlightEventsAPI(FlightEventReadRepository):
+class FlightEventsAPIRepository(FlightEventReadRepositoryInterface):
     """Flight events repository implementation."""
 
     def __init__(self, settings: Settings) -> None:

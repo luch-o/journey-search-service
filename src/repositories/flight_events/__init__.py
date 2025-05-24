@@ -1,7 +1,11 @@
 """Flight events repository."""
 
 from .exceptions import FlightEventRetrievalError
-from .interface import FlightEventReadRepository
-from .main import FlightEventsAPI
+from .interface import FlightEventReadRepositoryInterface
+from .main import FlightEventsAPIRepository
 
-__all__ = ["FlightEventReadRepository", "FlightEventsAPI", "FlightEventRetrievalError"]
+__all__ = [
+    "FlightEventReadRepositoryInterface",
+    "FlightEventsAPIRepository",
+    "FlightEventRetrievalError",
+]

@@ -5,7 +5,7 @@ from abc import ABC, abstractmethod
 from src.models import FlightEvent
 
 
-class FlightEventReadRepository(ABC):
+class FlightEventReadRepositoryInterface(ABC):
     """Flight event repository interface."""
 
     @abstractmethod

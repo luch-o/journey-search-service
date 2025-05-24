@@ -7,7 +7,7 @@ import pytest
 from src.core.config import Settings
 from src.models import FlightEvent
 from src.repositories.flight_events.exceptions import FlightEventRetrievalError
-from src.repositories.flight_events.main import FlightEventsAPI
+from src.repositories.flight_events.main import FlightEventsAPIRepository
 
 
 @pytest.mark.asyncio
@@ -20,9 +20,9 @@ class TestFlightEventsAPI:
         return Settings(flight_events_api_url="https://api.flight-events.com")
 
     @pytest.fixture
-    def repository(self, settings: Settings) -> FlightEventsAPI:
+    def repository(self, settings: Settings) -> FlightEventsAPIRepository:
         """Fixture for the repository."""
-        return FlightEventsAPI(settings)
+        return FlightEventsAPIRepository(settings)
 
     @patch(
         "httpx.AsyncClient.get",
@@ -53,7 +53,9 @@ class TestFlightEventsAPI:
             }
         ),
     )
-    async def test_flight_events_api_list(self, repository: FlightEventsAPI) -> None:
+    async def test_flight_events_api_list(
+        self, repository: FlightEventsAPIRepository
+    ) -> None:
         """Test the flight events API list method."""
         flight_events = await repository.list()
         assert flight_events == [
@@ -88,7 +90,7 @@ class TestFlightEventsAPI:
         ),
     )
     async def test_flight_events_api_list_error(
-        self, repository: FlightEventsAPI
+        self, repository: FlightEventsAPIRepository
     ) -> None:
         """Test the flight events API list method with an error."""
         with pytest.raises(FlightEventRetrievalError):
