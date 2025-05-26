@@ -34,5 +34,5 @@ class FlightEventsAPIRepository(FlightEventReadRepositoryInterface):
                     departure_time=event["departure_datetime"],
                     arrival_time=event["arrival_datetime"],
                 )
-                for event in await response.json()
+                for event in response.json()
             ]

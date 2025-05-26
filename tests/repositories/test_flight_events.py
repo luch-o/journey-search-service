@@ -1,6 +1,6 @@
 """Test the flight events API."""
 
-from unittest.mock import AsyncMock, patch
+from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
@@ -23,7 +23,7 @@ class TestFlightEventsAPI:
         "httpx.AsyncClient.get",
         AsyncMock(
             **{
-                "return_value": AsyncMock(
+                "return_value": MagicMock(
                     **{
                         "is_error": False,
                         "status_code": 200,
