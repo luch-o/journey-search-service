@@ -15,11 +15,6 @@ class TestFlightEventsAPI:
     """Test the flight events API."""
 
     @pytest.fixture
-    def settings(self) -> Settings:
-        """Fixture for the settings."""
-        return Settings(flight_events_api_url="https://api.flight-events.com")
-
-    @pytest.fixture
     def repository(self, settings: Settings) -> FlightEventsAPIRepository:
         """Fixture for the repository."""
         return FlightEventsAPIRepository(settings)

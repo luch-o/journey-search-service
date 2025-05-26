@@ -6,6 +6,7 @@ from unittest.mock import AsyncMock
 import pytest
 
 from src.commands.search_journeys import SearchJourneysCommand
+from src.core.config import Settings
 from src.models.models import FlightEvent, Journey
 
 
@@ -48,16 +49,93 @@ class TestSearchJourneysCommand:
                 ],
                 id="single-event-direct-flight",
             ),
+            # Test case 3: One direct flight with multiple events
+            pytest.param(
+                [
+                    FlightEvent(
+                        flight_number="IB1234",
+                        from_airport="MAD",
+                        to_airport="BUE",
+                        departure_time=datetime(2021, 12, 31, 10, 0, 0),
+                        arrival_time=datetime(2021, 12, 31, 12, 0, 0),
+                    ),
+                    FlightEvent(
+                        flight_number="IB1235",
+                        from_airport="BUE",
+                        to_airport="MAD",
+                        departure_time=datetime(2021, 12, 31, 13, 0, 0),
+                        arrival_time=datetime(2021, 12, 31, 15, 0, 0),
+                    ),
+                ],
+                [
+                    Journey(
+                        path=[
+                            FlightEvent(
+                                flight_number="IB1234",
+                                from_airport="MAD",
+                                to_airport="BUE",
+                                departure_time=datetime(2021, 12, 31, 10, 0, 0),
+                                arrival_time=datetime(2021, 12, 31, 12, 0, 0),
+                            ),
+                        ]
+                    )
+                ],
+                id="one-direct-flight-with-multiple-events",
+            ),
+            # Test case 4: journey with one connection
+            pytest.param(
+                [
+                    FlightEvent(
+                        flight_number="IB1234",
+                        from_airport="MAD",
+                        to_airport="BOG",
+                        departure_time=datetime(2021, 12, 31, 10, 0, 0),
+                        arrival_time=datetime(2021, 12, 31, 12, 0, 0),
+                    ),
+                    FlightEvent(
+                        flight_number="IB1235",
+                        from_airport="BOG",
+                        to_airport="BUE",
+                        departure_time=datetime(2021, 12, 31, 13, 0, 0),
+                        arrival_time=datetime(2021, 12, 31, 15, 0, 0),
+                    ),
+                ],
+                [
+                    Journey(
+                        path=[
+                            FlightEvent(
+                                flight_number="IB1234",
+                                from_airport="MAD",
+                                to_airport="BOG",
+                                departure_time=datetime(2021, 12, 31, 10, 0, 0),
+                                arrival_time=datetime(2021, 12, 31, 12, 0, 0),
+                            ),
+                            FlightEvent(
+                                flight_number="IB1235",
+                                from_airport="BOG",
+                                to_airport="BUE",
+                                departure_time=datetime(2021, 12, 31, 13, 0, 0),
+                                arrival_time=datetime(2021, 12, 31, 15, 0, 0),
+                            ),
+                        ]
+                    )
+                ],
+                id="journey-with-one-connection",
+            ),
         ],
     )
     async def test_search_journeys_command(
-        self, flight_events: list[FlightEvent], expected_journeys: list[Journey]
+        self,
+        flight_events: list[FlightEvent],
+        expected_journeys: list[Journey],
+        settings: Settings,
     ) -> None:
         """Test the search journeys command with different flight event scenarios.
 
         Args:
             flight_events: List of flight events to be returned by the repository
             expected_journeys: Expected list of journeys to be returned by the command
+            settings: Settings for the application
 
         """
         flight_events_repository = AsyncMock(**{"list.return_value": flight_events})
@@ -66,5 +144,6 @@ class TestSearchJourneysCommand:
             from_airport="MAD",
             to_airport="BUE",
             flight_events_repository=flight_events_repository,
+            settings=settings,
         )
         assert await command.execute() == expected_journeys
