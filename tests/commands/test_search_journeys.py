@@ -122,6 +122,69 @@ class TestSearchJourneysCommand:
                 ],
                 id="journey-with-one-connection",
             ),
+            # Test case 5: discard journey with more than one connection
+            pytest.param(
+                [
+                    FlightEvent(
+                        flight_number="IB1234",
+                        from_airport="MAD",
+                        to_airport="BOG",
+                        departure_time=datetime(2021, 12, 31, 10, 0, 0),
+                        arrival_time=datetime(2021, 12, 31, 12, 0, 0),
+                    ),
+                    FlightEvent(
+                        flight_number="IB1235",
+                        from_airport="BOG",
+                        to_airport="GRU",
+                        departure_time=datetime(2021, 12, 31, 13, 0, 0),
+                        arrival_time=datetime(2021, 12, 31, 15, 0, 0),
+                    ),
+                    FlightEvent(
+                        flight_number="IB1236",
+                        from_airport="GRU",
+                        to_airport="BUE",
+                        departure_time=datetime(2021, 12, 31, 16, 0, 0),
+                        arrival_time=datetime(2021, 12, 31, 18, 0, 0),
+                    ),
+                ],
+                [],
+                id="discard-many-connections",
+            ),
+            # Test case 6: discard journey with a connection longer than 4 hours
+            pytest.param(
+                [
+                    FlightEvent(
+                        flight_number="IB1234",
+                        from_airport="MAD",
+                        to_airport="BOG",
+                        departure_time=datetime(2021, 12, 31, 10, 0, 0),
+                        arrival_time=datetime(2021, 12, 31, 12, 0, 0),
+                    ),
+                    FlightEvent(
+                        flight_number="IB1235",
+                        from_airport="BOG",
+                        to_airport="BUE",
+                        departure_time=datetime(2021, 12, 31, 19, 0, 0),
+                        arrival_time=datetime(2021, 12, 31, 23, 0, 0),
+                    ),
+                ],
+                [],
+                id="discard-long-connection-wait",
+            ),
+            # Test case 7: discard journey with too late arrival
+            pytest.param(
+                [
+                    FlightEvent(
+                        flight_number="IB1234",
+                        from_airport="MAD",
+                        to_airport="BUE",
+                        departure_time=datetime(2021, 12, 31, 23, 30, 0),
+                        arrival_time=datetime(2022, 1, 1, 1, 0, 0),
+                    ),
+                ],
+                [],
+                id="discard-too-late-arrival",
+            ),
         ],
     )
     async def test_search_journeys_command(

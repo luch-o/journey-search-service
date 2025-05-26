@@ -1,6 +1,6 @@
 """Search journeys command."""
 
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 
 from src.commands.interface import CommandInterface
 from src.core.config import Settings
@@ -21,10 +21,16 @@ class SearchJourneysCommand(CommandInterface):
     ) -> None:
         """Initialize the search journeys command."""
         self.flight_events_repository = flight_events_repository
-        self.date = date
+        self.min_departure_time = datetime.combine(date, datetime.min.time())
         self.from_airport = from_airport
         self.to_airport = to_airport
-        self.settings = settings
+        self.max_connections = settings.max_connections
+        self.max_connecion_wait_time = timedelta(
+            hours=settings.max_connextion_duration_hours
+        )
+        self.max_arrival_time = self.min_departure_time + timedelta(
+            hours=settings.max_journey_duration_hours
+        )
 
     async def execute(self) -> list[Journey]:
         """Search journeys for a given date, destination and origin."""
@@ -52,11 +58,11 @@ class SearchJourneysCommand(CommandInterface):
 
         """
         relevant = {}
-        max_arrival_date = self.date + timedelta(
-            hours=self.settings.max_journey_duration_hours
-        )
         for flight_event in flight_events:
-            if self.date <= flight_event.departure_time.date() <= max_arrival_date:
+            if (
+                self.min_departure_time <= flight_event.departure_time
+                and flight_event.arrival_time <= self.max_arrival_time
+            ):
                 if flight_event.from_airport not in relevant:
                     relevant[flight_event.from_airport] = []
                 relevant[flight_event.from_airport].append(flight_event)
@@ -99,8 +105,14 @@ class SearchJourneysCommand(CommandInterface):
         """
         paths = []
         for flight_event in relevant_events_mapping[from_airport]:
-            if len(path) > self.settings.max_connections:
+            # discard paths with too many connections
+            if len(path) > self.max_connections:
                 break
+            # discard paths with long connection times
+            if (
+                flight_event.departure_time - path[-1].arrival_time
+            ) > self.max_connecion_wait_time:
+                continue
             if flight_event.to_airport == self.to_airport:
                 paths.append(path + [flight_event])
             else:
