@@ -25,17 +25,13 @@ class SearchJourneysCommand(CommandInterface):
         self.from_airport = from_airport
         self.to_airport = to_airport
         self.max_connections = settings.max_connections
-        self.max_connecion_wait_time = timedelta(
-            hours=settings.max_connextion_duration_hours
-        )
+        self.max_connecion_wait_time = timedelta(hours=settings.max_connextion_duration_hours)
         self.max_journey_duration = timedelta(hours=settings.max_journey_duration_hours)
 
     async def execute(self) -> list[Journey]:
         """Search journeys for a given date, destination and origin."""
         flight_events = await self.flight_events_repository.list()
-        relevant_events_mapping = self.__get_relevant_flight_events_mapping(
-            flight_events
-        )
+        relevant_events_mapping = self.__get_relevant_flight_events_mapping(flight_events)
         return self.__find_journeys(relevant_events_mapping)
 
     def __get_relevant_flight_events_mapping(

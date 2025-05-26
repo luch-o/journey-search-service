@@ -48,9 +48,7 @@ class TestFlightEventsAPI:
             }
         ),
     )
-    async def test_flight_events_api_list(
-        self, repository: FlightEventsAPIRepository
-    ) -> None:
+    async def test_flight_events_api_list(self, repository: FlightEventsAPIRepository) -> None:
         """Test the flight events API list method."""
         flight_events = await repository.list()
         assert flight_events == [

@@ -72,9 +72,7 @@ class TestSearchJourneys:
 
     @patch(
         "src.commands.SearchJourneysCommand.execute",
-        AsyncMock(
-            side_effect=FlightEventRetrievalError("Failed to retrieve flight events")
-        ),
+        AsyncMock(side_effect=FlightEventRetrievalError("Failed to retrieve flight events")),
     )
     async def test_search_fails_retrieval_error(self, client: TestClient) -> None:
         """Test the search journeys endpoint fails if the retrieval error is raised."""

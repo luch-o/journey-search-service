@@ -41,12 +41,8 @@ class TestSearchJourneysCommand:
                                 flight_number="IB1234",
                                 from_airport="MAD",
                                 to_airport="BUE",
-                                departure_time=datetime(
-                                    2021, 12, 31, 10, 0, 0, tzinfo=UTC
-                                ),
-                                arrival_time=datetime(
-                                    2021, 12, 31, 12, 0, 0, tzinfo=UTC
-                                ),
+                                departure_time=datetime(2021, 12, 31, 10, 0, 0, tzinfo=UTC),
+                                arrival_time=datetime(2021, 12, 31, 12, 0, 0, tzinfo=UTC),
                             )
                         ]
                     )
@@ -78,12 +74,8 @@ class TestSearchJourneysCommand:
                                 flight_number="IB1234",
                                 from_airport="MAD",
                                 to_airport="BUE",
-                                departure_time=datetime(
-                                    2021, 12, 31, 10, 0, 0, tzinfo=UTC
-                                ),
-                                arrival_time=datetime(
-                                    2021, 12, 31, 12, 0, 0, tzinfo=UTC
-                                ),
+                                departure_time=datetime(2021, 12, 31, 10, 0, 0, tzinfo=UTC),
+                                arrival_time=datetime(2021, 12, 31, 12, 0, 0, tzinfo=UTC),
                             ),
                         ]
                     )
@@ -115,23 +107,15 @@ class TestSearchJourneysCommand:
                                 flight_number="IB1234",
                                 from_airport="MAD",
                                 to_airport="BOG",
-                                departure_time=datetime(
-                                    2021, 12, 31, 10, 0, 0, tzinfo=UTC
-                                ),
-                                arrival_time=datetime(
-                                    2021, 12, 31, 12, 0, 0, tzinfo=UTC
-                                ),
+                                departure_time=datetime(2021, 12, 31, 10, 0, 0, tzinfo=UTC),
+                                arrival_time=datetime(2021, 12, 31, 12, 0, 0, tzinfo=UTC),
                             ),
                             FlightEvent(
                                 flight_number="IB1235",
                                 from_airport="BOG",
                                 to_airport="BUE",
-                                departure_time=datetime(
-                                    2021, 12, 31, 13, 0, 0, tzinfo=UTC
-                                ),
-                                arrival_time=datetime(
-                                    2021, 12, 31, 15, 0, 0, tzinfo=UTC
-                                ),
+                                departure_time=datetime(2021, 12, 31, 13, 0, 0, tzinfo=UTC),
+                                arrival_time=datetime(2021, 12, 31, 15, 0, 0, tzinfo=UTC),
                             ),
                         ]
                     )
@@ -226,9 +210,7 @@ class TestSearchJourneysCommand:
                                 flight_number="IB1234",
                                 from_airport="MAD",
                                 to_airport="BUE",
-                                departure_time=datetime(
-                                    2021, 12, 31, 23, 59, 59, tzinfo=UTC
-                                ),
+                                departure_time=datetime(2021, 12, 31, 23, 59, 59, tzinfo=UTC),
                                 arrival_time=datetime(2022, 1, 1, 12, 0, 0, tzinfo=UTC),
                             ),
                         ]
