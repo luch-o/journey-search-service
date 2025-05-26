@@ -1,6 +1,6 @@
 """Search journeys command."""
 
-from datetime import date, datetime, timedelta
+from datetime import UTC, date, datetime, timedelta
 
 from src.commands.interface import CommandInterface
 from src.core.config import Settings
@@ -21,7 +21,7 @@ class SearchJourneysCommand(CommandInterface):
     ) -> None:
         """Initialize the search journeys command."""
         self.flight_events_repository = flight_events_repository
-        self.min_departure_time = datetime.combine(date, datetime.min.time())
+        self.min_departure_time = datetime.combine(date, datetime.min.time(), UTC)
         self.from_airport = from_airport
         self.to_airport = to_airport
         self.max_connections = settings.max_connections
