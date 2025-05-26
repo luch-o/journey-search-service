@@ -9,5 +9,5 @@ class FlightEventReadRepositoryInterface(ABC):
     """Flight event repository interface."""
 
     @abstractmethod
-    def list(self) -> list[FlightEvent]:
+    async def list(self) -> list[FlightEvent]:
         """List flight events."""
