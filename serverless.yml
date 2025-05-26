@@ -1,0 +1,34 @@
+service: journey-search
+
+provider:
+  name: aws
+  runtime: python3.12
+
+package:
+  patterns:
+    # exclude all files
+    - "!**/**"
+    # include  python files in src and deploy directories
+    - "src/**/*.py"
+    - "deploy/**/*.py"
+
+custom:
+  pythonRequirements:
+    slim: true
+    dockerizePip: true
+
+functions:
+  api:
+    handler: deploy/handler.handler
+    environment:
+      FLIGHT_EVENTS_API_URL: ${env:FLIGHT_EVENTS_API_URL}
+      MAX_CONNECTIONS: ${env:MAX_CONNECTIONS}
+      MAX_JOURNEY_DURATION_HOURS: ${env:MAX_JOURNEY_DURATION_HOURS}
+      MAX_CONNEXTION_DURATION_HOURS: ${env:MAX_CONNEXTION_DURATION_HOURS}
+    events:
+      - httpApi:
+          method: any
+          path: /{proxy+}
+
+plugins:
+  - serverless-python-requirements
