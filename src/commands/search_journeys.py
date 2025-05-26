@@ -28,9 +28,7 @@ class SearchJourneysCommand(CommandInterface):
         self.max_connecion_wait_time = timedelta(
             hours=settings.max_connextion_duration_hours
         )
-        self.max_arrival_time = self.min_departure_time + timedelta(
-            hours=settings.max_journey_duration_hours
-        )
+        self.max_journey_duration = timedelta(hours=settings.max_journey_duration_hours)
 
     async def execute(self) -> list[Journey]:
         """Search journeys for a given date, destination and origin."""
@@ -59,10 +57,7 @@ class SearchJourneysCommand(CommandInterface):
         """
         relevant = {}
         for flight_event in flight_events:
-            if (
-                self.min_departure_time <= flight_event.departure_time
-                and flight_event.arrival_time <= self.max_arrival_time
-            ):
+            if self.min_departure_time <= flight_event.departure_time:
                 if flight_event.from_airport not in relevant:
                     relevant[flight_event.from_airport] = []
                 relevant[flight_event.from_airport].append(flight_event)
@@ -108,11 +103,18 @@ class SearchJourneysCommand(CommandInterface):
             # discard paths with too many connections
             if len(path) > self.max_connections:
                 break
-            # discard paths with long connection times
-            if (
-                flight_event.departure_time - path[-1].arrival_time
-            ) > self.max_connecion_wait_time:
+            if any(
+                [
+                    # discard paths with long connection times
+                    (flight_event.departure_time - path[-1].arrival_time)
+                    > self.max_connecion_wait_time,
+                    # discard paths with too long travel time across the journey
+                    (flight_event.arrival_time - path[0].departure_time)
+                    > self.max_journey_duration,
+                ]
+            ):
                 continue
+
             if flight_event.to_airport == self.to_airport:
                 paths.append(path + [flight_event])
             else:
