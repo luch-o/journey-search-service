@@ -2,6 +2,13 @@
 
 A FastAPI-based service for searching flight journeys, deployed on AWS Lambda using the Serverless Framework.
 
+## Development
+
+The service is built using:
+- FastAPI for the web framework
+- Mangum for AWS Lambda integration
+- Pydantic for data validation
+- Serverless Framework for deployment
 
 ## Prerequisites
 
@@ -9,6 +16,7 @@ A FastAPI-based service for searching flight journeys, deployed on AWS Lambda us
 - Node.js and npm (for Serverless Framework)
 - AWS CLI configured with appropriate credentials
 - Docker (for local development and deployment)
+
 
 ## Project Structure
 
@@ -22,11 +30,20 @@ A FastAPI-based service for searching flight journeys, deployed on AWS Lambda us
 └── requirements.txt       # Python dependencies
 ```
 
+## Code Quality
+
+The project uses several tools to maintain code quality:
+
+- Ruff for linting
+- Pre-commit hooks for automated checks
+- Pytest for testing
+- Coverage for test coverage reporting
+
 ## Environment Setup
 
 1. Create and activate a virtual environment:
    ```bash
-   python -m venv .venv
+   uv venv .venv
    source .venv/bin/activate  # On Linux/Mac
    # or
    .venv\Scripts\activate  # On Windows
@@ -34,7 +51,7 @@ A FastAPI-based service for searching flight journeys, deployed on AWS Lambda us
 
 2. Install Python dependencies:
    ```bash
-   uv sync
+   uv pip sync pyproject.toml
    ```
 
 3. Install Serverless Framework and plugins:
@@ -66,14 +83,6 @@ Run the test suite with coverage:
 pytest --cov=src tests/
 ```
 
-## Code Quality
-
-The project uses several tools to maintain code quality:
-
-- Ruff for linting
-- Pre-commit hooks for automated checks
-- Pytest for testing
-- Coverage for test coverage reporting
 
 ## Deployment
 
@@ -96,11 +105,3 @@ The project uses several tools to maintain code quality:
    ```bash
    serverless remove
    ```
-
-## Development
-
-The service is built using:
-- FastAPI for the web framework
-- Mangum for AWS Lambda integration
-- Pydantic for data validation
-- Serverless Framework for deployment
