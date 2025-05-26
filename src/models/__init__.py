@@ -1,5 +1,5 @@
 """Models subpackage."""
 
-from .models import FlightEvent, Journey
+from .models import Airport, FlightEvent, Journey
 
-__all__ = ["FlightEvent", "Journey"]
+__all__ = ["Airport", "FlightEvent", "Journey"]
